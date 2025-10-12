@@ -18,6 +18,7 @@ export class SocketManager {
             socket.on("join", (name) => this.handleJoin(socket, name));
             socket.on("chat", (msg) => this.chat.handleChat(socket, msg));
             socket.on("disconnect", () => this.handleDisconnect(socket));
+            socket.on("packet", (buffer) => this.handlePacket(socket, buffer));
         });
     }
 
@@ -34,5 +35,12 @@ export class SocketManager {
         console.log(`${player.name} disconnected`);
         this.io.emit("message", `${player.name} left the game`);
         this.players.remove(socket.id);
+    }
+    handlePacket(socket, buffer) {
+        const view = new DataView(buffer);
+        const type = view.getUint8(0);
+        switch (type) {
+            
+        }
     }
 }
