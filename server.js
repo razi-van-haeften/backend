@@ -10,6 +10,8 @@ const io = new Server(server, {
   }
 });
 
+const players = [];
+
 io.on("connection", (socket) => {
   console.log("Client connected:", socket.id);
 
