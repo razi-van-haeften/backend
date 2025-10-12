@@ -31,7 +31,10 @@ export class SocketManager {
 
     handleDisconnect(socket) {
         const player = this.players.get(socket.id);
-        if (!player) return;
+        if (!player){
+            console.log(`${socket.id} disconnected`);
+            return;
+        } 
         console.log(`${player.name} disconnected`);
         this.io.emit("message", `${player.name} left the game`);
         this.players.remove(socket.id);
