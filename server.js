@@ -15,7 +15,7 @@ const players = {};
 io.on("connection", (socket) => {
   console.log("Client connected:", socket.id);
 
-  socket.emit("message", "Connected to Server");
+  socket.emit("message", "HI");
 
   socket.on("chat", (msg) => {
     console.log("Client said:", msg);
