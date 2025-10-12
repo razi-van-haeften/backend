@@ -1,6 +1,7 @@
 import express from "express";
 import { createServer } from "http";
 import { Server } from "socket.io";
+import { Player } from './Player.js';
 
 const app = express();
 const server = createServer(app);
@@ -14,8 +15,10 @@ const players = {};
 
 io.on("connection", (socket) => {
   console.log("Client connected:", socket.id);
+  
+  players[socket.id] = new Player(socket.id, "Guest");
 
-  socket.emit("message", "HI");
+  socket.emit("message", "Joined Game");
 
   socket.on("chat", (msg) => {
     console.log("Client said:", msg);
