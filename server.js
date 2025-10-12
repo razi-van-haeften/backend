@@ -20,8 +20,10 @@ io.on("connection", (socket) => {
 
   socket.on("join", (name) => {
     console.log(name, "Joined the game");
+    socket.broadcast.emit("message", `${name} has joined the game`);
+
     players[socket.id] = new Player(socket.id, name);
-    socket.emit("message", "Joined Game");
+    socket.emit("message", "Joined game");
   });
 
   socket.on("chat", (msg) => {
