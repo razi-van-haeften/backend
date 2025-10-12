@@ -16,7 +16,7 @@ io.on("connection", (socket) => {
   socket.emit("message", "Hello from Render Socket.IO server!");
 
   socket.on("chat", (msg) => {
-    console.log("Received chat:", msg);
+    console.log("Client said:", msg);
     io.emit("chat", `${socket.id}: ${msg}`); // broadcast to everyone
   });
 
