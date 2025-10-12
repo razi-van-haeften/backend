@@ -16,14 +16,14 @@ const players = {};
 io.on("connection", (socket) => {
   console.log("Client connected:", socket.id);
 
-  socket.emit("message", "Joined Lobby");
+  socket.emit("joined", "joined lobby");
 
   socket.on("join", (name) => {
-    console.log(name, "Joined the game");
+    console.log(name, "joined the game");
     socket.broadcast.emit("message", `${name} has joined the game`);
 
     players[socket.id] = new Player(socket.id, name);
-    socket.emit("message", "Joined game");
+    socket.emit("message", "joined game");
   });
 
   socket.on("chat", (msg) => {
