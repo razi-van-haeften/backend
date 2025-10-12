@@ -10,12 +10,12 @@ const io = new Server(server, {
   }
 });
 
-const players = [];
+const players = {};
 
 io.on("connection", (socket) => {
   console.log("Client connected:", socket.id);
 
-  socket.emit("message", "Hello from Render Socket.IO server!");
+  socket.emit("message", "Connected to Server");
 
   socket.on("chat", (msg) => {
     console.log("Client said:", msg);
