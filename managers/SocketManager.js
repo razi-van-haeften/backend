@@ -60,7 +60,7 @@ export class SocketManager {
         const payload = buffer.slice(1);
 
         switch (type) {
-            case 0: handleJoinGame(socket, payload); break;
+            case 0: this.handleJoinGame(socket, payload); break;
         }
     }
 
