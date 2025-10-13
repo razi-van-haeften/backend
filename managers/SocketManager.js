@@ -7,7 +7,6 @@ export class SocketManager {
         this.players = new PlayerManager();
         this.chat = new ChatManager(io, this.players);
         this.registerEvents();
-        this.text_decoder = new TextDecoder("utf-8");
     }
 
     registerEvents() {
@@ -32,9 +31,10 @@ export class SocketManager {
 
     handleJoinPacket(socket, buffer){
         const sliced = buffer.slice(1);
-        const text = this.text_decoder.decode(sliced);
-
-        console.log(text);
+        const name = sliced.toString('utf8');
+        
+        const player = this.players.add(socket.id, name);
+        console.log(`${player.name} joined the game`);
     }
 
     handleDisconnect(socket) {
@@ -48,12 +48,10 @@ export class SocketManager {
         this.players.remove(socket.id);
     }
     handlePacket(socket, buffer) {
-        const sliced = buffer.slice(1);
-        console.log(sliced.toString('utf8'));
-        // const view = new DataView(buffer);
-        // const type = view.getUint8(0);
-        // switch (type) {
-        //     case 0: handleJoinPacket(socket, buffer); break;
-        // }
+        
+        const type = buffer.readUInt8(0)
+        switch (type) {
+            case 0: handleJoinPacket(socket, buffer); break;
+        }
     }
 }
