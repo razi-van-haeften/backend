@@ -29,14 +29,7 @@ export class SocketManager {
         socket.emit("message", "joined game");
     }
 
-    handleJoinGame(socket, payload) {
-        const name = payload.toString('utf8');
-        const player = this.players.add(socket.id, name);
-        console.log(`${player.name} joined the game using packet`);
-        const type = Buffer.from([4]);
-        const payload = Buffer.from(player.name, "utf8");
-        this.sendPacket(type, payload, "else");
-    }
+    
 
     handleDisconnect(socket) {
         const player = this.players.get(socket.id);
@@ -49,8 +42,20 @@ export class SocketManager {
         this.players.remove(socket.id);
     }
 
-    handlePacket(socket, buffer) {
+    joinNotification(socket, name){
+        const type = Buffer.from([4]);
+        const payload = Buffer.from(name, "utf8");
+        this.sendPacket(type, payload, "else");
+    }
 
+    handleJoinGame(socket, payload) {
+        const name = payload.toString('utf8');
+        const player = this.players.add(socket.id, name);
+        console.log(`${player.name} joined the game using packet`);
+        this.joinNotification(socket, player.name);
+    }
+
+    handlePacket(socket, buffer) {
         const type = buffer.readUInt8(0);
         const payload = buffer.slice(1);
 
@@ -58,6 +63,7 @@ export class SocketManager {
             case 0: handleJoinGame(socket, payload); break;
         }
     }
+
     sendPacket(type, payload, scope, socket = null) {
         const buffer = Buffer.concat([type, payload]);
         if (scope == "all") {
