@@ -51,7 +51,7 @@ export class SocketManager {
     handleJoinGame(socket, payload) {
         const name = payload.toString('utf8');
         const player = this.players.add(socket.id, name);
-        console.log(`${player.name} joined the game using packet`);
+        console.log(player.name + "joined the game using packet");
         this.joinNotification(socket, player.name);
     }
 
