@@ -7,6 +7,7 @@ export class SocketManager {
         this.players = new PlayerManager();
         this.chat = new ChatManager(io, this.players);
         this.registerEvents();
+        this.text_decoder = new TextDecoder("utf-8");
     }
 
     registerEvents() {
@@ -29,6 +30,13 @@ export class SocketManager {
         socket.emit("message", "joined game");
     }
 
+    handleJoinPacket(socket, buffer){
+        const sliced = buffer.slice(1);
+        const text = this.text_decoder.decode(sliced);
+
+        console.log(text);
+    }
+
     handleDisconnect(socket) {
         const player = this.players.get(socket.id);
         if (!player){
@@ -40,10 +48,11 @@ export class SocketManager {
         this.players.remove(socket.id);
     }
     handlePacket(socket, buffer) {
-        const view = new DataView(buffer);
-        const type = view.getUint8(0);
-        switch (type) {
-            
-        }
+        console.log(buffer);
+        // const view = new DataView(buffer);
+        // const type = view.getUint8(0);
+        // switch (type) {
+        //     case 0: handleJoinPacket(socket, buffer); break;
+        // }
     }
 }

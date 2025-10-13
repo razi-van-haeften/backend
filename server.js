@@ -10,7 +10,7 @@ const io = new Server(server, {
     origin: "*"
   },
   pingInterval: 200, 
-  pingTimeout: 3000
+  pingTimeout: 30000
 });
 
 new SocketManager(io);
