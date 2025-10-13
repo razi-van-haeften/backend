@@ -45,7 +45,7 @@ export class SocketManager {
     joinNotification(socket, name){
         const type = Buffer.from([4]);
         const payload = Buffer.from(name, "utf8");
-        this.sendPacket(type, payload, "else");
+        this.sendPacket(type, payload, "else", socket);
     }
 
     handleJoinGame(socket, payload) {
