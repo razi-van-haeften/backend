@@ -48,7 +48,8 @@ export class SocketManager {
         this.players.remove(socket.id);
     }
     handlePacket(socket, buffer) {
-        console.log(buffer);
+        const sliced = buffer.slice(1);
+        console.log(sliced.toString('utf8'));
         // const view = new DataView(buffer);
         // const type = view.getUint8(0);
         // switch (type) {
