@@ -29,29 +29,43 @@ export class SocketManager {
         socket.emit("message", "joined game");
     }
 
-    handleJoinPacket(socket, buffer){
-        const sliced = buffer.slice(1);
-        const name = sliced.toString('utf8');
-        
+    handleJoinGame(socket, payload) {
+        const name = payload.toString('utf8');
         const player = this.players.add(socket.id, name);
-        console.log(`${player.name} joined the game`);
+        console.log(`${player.name} joined the game using packet`);
+        const type = Buffer.from([4]);
+        const payload = Buffer.from(player.name, "utf8");
+        this.sendPacket(type, payload, "else");
     }
 
     handleDisconnect(socket) {
         const player = this.players.get(socket.id);
-        if (!player){
+        if (!player) {
             console.log(`${socket.id} disconnected`);
             return;
-        } 
+        }
         console.log(`${player.name} disconnected`);
         this.io.emit("message", `${player.name} left the game`);
         this.players.remove(socket.id);
     }
+
     handlePacket(socket, buffer) {
-        
-        const type = buffer.readUInt8(0)
+
+        const type = buffer.readUInt8(0);
+        const payload = buffer.slice(1);
+
         switch (type) {
-            case 0: handleJoinPacket(socket, buffer); break;
+            case 0: handleJoinGame(socket, payload); break;
+        }
+    }
+    sendPacket(type, payload, scope, socket = null) {
+        const buffer = Buffer.concat([type, payload]);
+        if (scope == "all") {
+            this.io.emit("packet", buffer);
+        } else if (scope == "sender") {
+            socket.emit("packet", buffer);
+        } else if (scope == "else") {
+            socket.broadcast.emit("packet", buffer);
         }
     }
 }
