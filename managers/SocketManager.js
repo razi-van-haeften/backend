@@ -66,6 +66,7 @@ export class SocketManager {
 
     sendPacket(type, payload, scope, socket = null) {
         const buffer = Buffer.concat([type, payload]);
+        console.log(buffer);
         if (scope == "all") {
             this.io.emit("packet", buffer);
         } else if (scope == "sender") {
