@@ -13,10 +13,10 @@ export class SocketManager {
         this.io.on("connection", (socket) => {
             console.log("Client connected:", socket.id);
 
-            // socket.emit("joined", "joined lobby");
+            socket.emit("joined", "joined lobby");
 
-            // socket.on("join", (name) => this.handleJoin(socket, name));
-            // socket.on("chat", (msg) => this.chat.handleChat(socket, msg));
+            socket.on("join", (name) => this.handleJoin(socket, name));
+            socket.on("chat", (msg) => this.chat.handleChat(socket, msg));
             socket.on("disconnect", () => this.handleDisconnect(socket));
             socket.on("packet", (buffer) => this.handlePacket(socket, buffer));
         });
