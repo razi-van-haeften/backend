@@ -30,16 +30,13 @@ export class SocketManager {
         this.players.remove(socket.id);
     }
 
-    joinNotification(socket, name){
-        const payload = Buffer.from(name, "utf8");
-        this.sendPacket(4, payload, "else", socket);
-    }
-
     handleJoinGame(socket, payload) {
         const name = payload.toString('utf8');
         const player = this.players.add(socket.id, name);
         console.log(player.name + " joined");
-        this.joinNotification(socket, player.name);
+
+        const buffer = Buffer.from(name, "utf8");
+        this.sendPacket(4, buffer, "else", socket);
     }
 
     handleChat(socket, payload) {
