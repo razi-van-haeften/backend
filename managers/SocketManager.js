@@ -46,7 +46,7 @@ export class SocketManager {
     handleChat(socket, payload) {
         const player = this.players.get(socket.id);
         const type = payload.readUInt8(0);
-        const message = buffer.slice(1).toString('utf8');
+        const message = payload.slice(1).toString('utf8');
         const sender = player.name;
         console.log(`${player.name} said ${message}`);
     }
