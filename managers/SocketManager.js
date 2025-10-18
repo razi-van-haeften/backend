@@ -15,21 +15,20 @@ export class SocketManager {
 
             // socket.on("join", (name) => this.handleJoin(socket, name));
             // socket.on("chat", (msg) => this.chat.handleChat(socket, msg));
-            // socket.on("disconnect", () => this.handleDisconnect(socket));
+            socket.on("disconnect", () => this.handleDisconnect(socket));
             socket.on("packet", (buffer) => this.handlePacket(socket, buffer));
         });
     }
 
-    // handleDisconnect(socket) {
-    //     const player = this.players.get(socket.id);
-    //     if (!player) {
-    //         console.log(`${socket.id} disconnected`);
-    //         return;
-    //     }
-    //     console.log(`${player.name} disconnected`);
-    //     this.io.emit("message", `${player.name} left the game`);
-    //     this.players.remove(socket.id);
-    // }
+    handleDisconnect(socket) {
+        const player = this.players.get(socket.id);
+        if (!player) {
+            console.log(`${socket.id} disconnected`);
+            return;
+        }
+        console.log(`${player.name} disconnected`);
+        this.players.remove(socket.id);
+    }
 
     joinNotification(socket, name){
         const type = Buffer.from([4]);
