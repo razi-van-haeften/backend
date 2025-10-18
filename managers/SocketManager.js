@@ -35,17 +35,18 @@ export class SocketManager {
         const player = this.players.add(socket.id, name);
         console.log(player.name + " joined");
 
-        const buffer = Buffer.from(name, "utf8");
-        this.sendPacket(4, buffer, "else", socket);
+        this.sendPacket(4, payload, "else", socket);
     }
 
     handleChat(socket, payload) {
+        const dlm = Buffer.from([31]);
         const player = this.players.get(socket.id);
         const type = payload.readUInt8(0);
-        const buffer = payload.slice(1);
+        var buffer = payload.slice(1);
         const message = buffer.toString('utf8');
-        const sender = player.name;
-        this.sendPacket(5, buffer, "else", socket);
+        const sender = Buffer.from([player.name]);
+        buffer = Buffer.concat([sender, dlm, buffer]);
+        this.sendPacket(5, buffer, "all", socket);
         console.log(`${player.name} said ${message}`);
     }
 
@@ -55,7 +56,7 @@ export class SocketManager {
 
         switch (type) {
             case 0: this.handleJoinGame(socket, payload); break;    //client send name and joins
-            case 5: this.handleChat(socket, payload); break;        //clint sends chat
+            case 5: this.handleChat(socket, payload); break;        //client sends chat
         }
     }
 
