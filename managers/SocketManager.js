@@ -47,7 +47,7 @@ export class SocketManager {
         const sender = Buffer.from([player.name]);
         buffer = Buffer.concat([sender, dlm, buffer]);
         this.sendPacket(5, buffer, "all", socket);
-        console.log(`${player.name} said ${message}`);
+        console.log(`${player.name} said: ${message}`);
     }
 
     handlePacket(socket, buffer) {
