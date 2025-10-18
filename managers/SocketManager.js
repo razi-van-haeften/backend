@@ -31,9 +31,8 @@ export class SocketManager {
     }
 
     joinNotification(socket, name){
-        const type = Buffer.from([4]);
         const payload = Buffer.from(name, "utf8");
-        this.sendPacket(type, payload, "else", socket);
+        this.sendPacket(4, payload, "else", socket);
     }
 
     handleJoinGame(socket, payload) {
@@ -62,7 +61,8 @@ export class SocketManager {
     }
 
     sendPacket(type, payload, scope, socket = null) {
-        const buffer = Buffer.concat([type, payload]);
+        const type_b = Buffer.from([type]);
+        const buffer = Buffer.concat([type_b, payload]);
         if (scope == "all") {
             this.io.emit("packet", buffer);
         } else if (scope == "sender") {
