@@ -44,7 +44,7 @@ export class SocketManager {
         const type = payload.readUInt8(0);
         var buffer = payload.slice(1);
         const message = buffer.toString('utf8');
-        const sender = Buffer.from([player.name]);
+        const sender = Buffer.from(player.name, 'utf8');
         buffer = Buffer.concat([sender, dlm, buffer]);
         console.log(buffer);
         this.sendPacket(5, buffer, "all", socket);
