@@ -46,6 +46,7 @@ export class SocketManager {
         const message = buffer.toString('utf8');
         const sender = Buffer.from([player.name]);
         buffer = Buffer.concat([sender, dlm, buffer]);
+        console.log(buffer);
         this.sendPacket(5, buffer, "all", socket);
         console.log(`${player.name} said: ${message}`);
     }
