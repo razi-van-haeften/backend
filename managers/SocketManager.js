@@ -93,6 +93,6 @@ export class SocketManager {
                 const finalPayload = Buffer.concat([id, payload]);
                 this.sendPacket(3, finalPayload, "all"); // no socket needed
             }
-        }, 50);
+        }, 10);
     }
 }
