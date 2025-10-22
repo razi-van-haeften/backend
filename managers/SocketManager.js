@@ -83,15 +83,15 @@ export class SocketManager {
     }
 
     loop() {
-        const T = setInterval(() => {
-            for (var i = 0; i < Object.values(this.players).length; i++) {
-                const player = Object.values(this.players)[i];
-                var payload = Buffer.alloc(8);
+        setInterval(() => {
+            const players = Object.values(this.players.players); // get actual Player objects
+            for (const player of players) {
+                const payload = Buffer.alloc(8);
                 payload.writeFloatLE(player.position.x, 0);
                 payload.writeFloatLE(player.position.y, 4);
                 const id = Buffer.from(player.id, "utf8");
-                payload = Buffer.concat([id, payload]);
-                this.sendPacket(3, payload, "all", socket);
+                const finalPayload = Buffer.concat([id, payload]);
+                this.sendPacket(3, finalPayload, "all"); // no socket needed
             }
         }, 50);
     }
