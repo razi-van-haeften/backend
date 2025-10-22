@@ -55,8 +55,8 @@ export class SocketManager {
         const x = payload.readFloatLE(0);
         const y = payload.readFloatLE(4);
 
-        this.players.get(socket.id).position.x = x;
-        this.players.get(socket.id).position.y = y;
+        this.players.get(socket.id).position.x += x;
+        this.players.get(socket.id).position.y += y;
     }
 
     handlePacket(socket, buffer) {
