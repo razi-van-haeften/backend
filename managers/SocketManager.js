@@ -86,9 +86,11 @@ export class SocketManager {
         const T = setInterval(() => {
             for (var i = 0; i < Object.values(this.players).length; i++) {
                 const player = Object.values(this.players)[i];
-                const payload = Buffer.alloc(8);
+                var payload = Buffer.alloc(8);
                 payload.writeFloatLE(player.position.x, 0);
                 payload.writeFloatLE(player.position.y, 4);
+                const id = Buffer.from(player.id, "utf8");
+                payload = Buffer.concat([id, payload]);
                 this.sendPacket(3, payload, "all", socket);
             }
         }, 50);
