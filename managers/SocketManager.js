@@ -7,6 +7,7 @@ export class SocketManager {
         this.players = new PlayerManager();
         this.chat = new ChatManager(io, this.players);
         this.registerEvents();
+        this.loop();
     }
 
     registerEvents() {
@@ -46,9 +47,16 @@ export class SocketManager {
         const message = buffer.toString('utf8');
         const sender = Buffer.from(player.name, 'utf8');
         buffer = Buffer.concat([sender, dlm, buffer]);
-        console.log(buffer);
         this.sendPacket(5, buffer, "all", socket);
         console.log(`${player.name} said: ${message}`);
+    }
+
+    handlePlayer(socket, payload) {
+        const x = payload.readFloatLE(0);
+        const y = payload.readFloatLE(4);
+
+        this.players.get(socket.id).position.x = x;
+        this.players.get(socket.id).position.y = y;
     }
 
     handlePacket(socket, buffer) {
@@ -58,6 +66,7 @@ export class SocketManager {
         switch (type) {
             case 0: this.handleJoinGame(socket, payload); break;    //client send name and joins
             case 5: this.handleChat(socket, payload); break;        //client sends chat
+            case 6: this.handlePlayer(socket, payload); break;
         }
     }
 
@@ -71,5 +80,17 @@ export class SocketManager {
         } else if (scope == "else") {
             socket.broadcast.emit("packet", buffer);
         }
+    }
+
+    loop() {
+        const T = setInterval(() => {
+            for (var i = 0; i < Object.values(this.players).length; i++) {
+                const player = Object.values(this.players)[i];
+                const payload = Buffer.alloc(8);
+                payload.writeFloatLE(player.position.x, 0);
+                payload.writeFloatLE(player.position.y, 4);
+                this.sendPacket(3, payload, "all", socket);
+            }
+        }, 50);
     }
 }
